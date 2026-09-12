@@ -1,47 +1,56 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Taboo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="popup.css">
 </head>
 
 <body>
-
-    <div class="container">
-
-        <header class="header">
-            <h1>🔥 Taboo</h1>
-            <p>Your tabs have something to say.</p>
+    <div class="app">
+        <header class="top">
+            <div class="brand-row">
+                <h1 class="logo">Taboo</h1>
+                <span class="sticker" aria-hidden="true">spicy</span>
+            </div>
+            <p class="sub">Your tabs have something to say. It won’t be flattering.</p>
         </header>
 
-        <main>
+        <main class="content">
+            <section
+                id="roastCard"
+                class="roast"
+                data-state="idle"
+                aria-live="polite"
+                aria-atomic="true"
+            >
+                <div class="roast-top">
+                    <span id="roastLabel" class="eyebrow">Warming up</span>
+                    <span class="face" aria-hidden="true">;) </span>
+                </div>
 
-            <div id="roastCard" class="roast-card">
-
-                <span id="roastLabel" class="roast-label">
-                    TABOO SAYS
-                </span>
-
-                <p id="roastText">
-                    Click the button and let me judge your tabs.
+                <p id="roastText" class="line">
+                    Hit the button. I’ll peek at your tabs and say the quiet part out loud.
                 </p>
 
-            </div>
+                <div class="squiggle" aria-hidden="true"></div>
+            </section>
 
-            <button id="roastButton">
-                🔥 Roast Me
+            <button id="roastButton" class="cta" type="button">
+                <span class="cta-text">Roast me</span>
+                <span class="cta-zap" aria-hidden="true">✦</span>
             </button>
-
         </main>
 
-        <footer>
-            <p>Taboo sees your tabs. Taboo judges your choices.</p>
+        <footer class="foot">
+            <p>No mercy. Short punchlines only.</p>
         </footer>
-
     </div>
 
     <script type="module" src="popup.js"></script>
-
 </body>
 </html>
