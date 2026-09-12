@@ -1,16 +1,46 @@
 import { analyzeTabs } from "./js/tabAnalyzer.js";
+import { buildRoastContext } from "./js/contextBuilder.js";
 
 const roastButton = document.getElementById("roastButton");
-const tabCount = document.getElementById("tabCount");
+const roastText = document.getElementById("roastText");
 
 roastButton.addEventListener("click", async () => {
+    try {
+        roastButton.disabled = true;
+        roastButton.textContent = "🔥 Roasting...";
 
-    const tabs = await chrome.tabs.query({});
+        roastText.textContent = "Analyzing your questionable life choices...";
 
-    const analysis = analyzeTabs(tabs);
+        const tabs = await chrome.tabs.query({});
 
-    console.log(analysis);
+        const analysis = analyzeTabs(tabs);
 
-    tabCount.textContent =
-        `You have ${analysis.totalTabs} tabs open.`;
+        const roastContext = buildRoastContext(analysis);
+
+        const response = await fetch("http://localhost:3000/api/roast", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(roastContext)
+        });
+
+        if (!response.ok) {
+            throw new Error(`Server returned ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        roastText.textContent = data.roast;
+
+    } catch (error) {
+        console.error("Roast failed:", error);
+
+        roastText.textContent =
+            "Oops. Even Taboo couldn't handle your tabs. 💀";
+
+    } finally {
+        roastButton.disabled = false;
+        roastButton.textContent = "🔥 Roast Me";
+    }
 });
