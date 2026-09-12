@@ -1,16 +1,45 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
     <title>Taboo</title>
+    <link rel="stylesheet" href="popup.css">
 </head>
 
 <body>
 
-    <h1>🔥 Taboo</h1>
+    <div class="container">
 
-    <p id="roastText">Click the button to get roasted.</p>
+        <header class="header">
+            <h1>🔥 Taboo</h1>
+            <p>Your tabs have something to say.</p>
+        </header>
 
-    <button id="roastButton">🔥 Roast Me</button>
+        <main>
+
+            <div id="roastCard" class="roast-card">
+
+                <span id="roastLabel" class="roast-label">
+                    TABOO SAYS
+                </span>
+
+                <p id="roastText">
+                    Click the button and let me judge your tabs.
+                </p>
+
+            </div>
+
+            <button id="roastButton">
+                🔥 Roast Me
+            </button>
+
+        </main>
+
+        <footer>
+            <p>Taboo sees your tabs. Taboo judges your choices.</p>
+        </footer>
+
+    </div>
 
     <script type="module" src="popup.js"></script>
 

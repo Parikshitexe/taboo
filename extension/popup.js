@@ -3,12 +3,14 @@ import { buildRoastContext } from "./js/contextBuilder.js";
 
 const roastButton = document.getElementById("roastButton");
 const roastText = document.getElementById("roastText");
+const roastLabel = document.getElementById("roastLabel");
 
 roastButton.addEventListener("click", async () => {
     try {
         roastButton.disabled = true;
         roastButton.textContent = "🔥 Roasting...";
 
+        roastLabel.textContent = "TABOO IS THINKING";
         roastText.textContent = "Analyzing your questionable life choices...";
 
         const tabs = await chrome.tabs.query({});
@@ -31,11 +33,13 @@ roastButton.addEventListener("click", async () => {
 
         const data = await response.json();
 
+        roastLabel.textContent = "TABOO SAYS";
         roastText.textContent = data.roast;
 
     } catch (error) {
         console.error("Roast failed:", error);
 
+        roastLabel.textContent = "TABOO FAILED";
         roastText.textContent =
             "Oops. Even Taboo couldn't handle your tabs. 💀";
 
