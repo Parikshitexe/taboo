@@ -14,7 +14,23 @@ const MAX_DOMAINS = 20;
 const MAX_TITLE_LENGTH = 120;
 const MAX_DOMAIN_LENGTH = 253;
 
-app.use(cors());
+// Allow Chrome extension popups + local tooling; block random websites.
+app.use(cors({
+    origin(origin, callback) {
+        if (
+            !origin ||
+            origin.startsWith("chrome-extension://") ||
+            origin.startsWith("http://localhost:") ||
+            origin.startsWith("http://127.0.0.1:")
+        ) {
+            callback(null, true);
+            return;
+        }
+
+        callback(null, false);
+    }
+}));
+
 app.use(express.json({ limit: MAX_JSON_BODY }));
 
 console.log(
