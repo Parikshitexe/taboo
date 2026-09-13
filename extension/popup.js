@@ -1,7 +1,8 @@
 import { analyzeTabs } from "./js/tabAnalyzer.js";
 import { buildRoastContext } from "./js/contextBuilder.js";
+import { API_BASE_URL } from "./js/config.js";
 
-const API_URL = "http://localhost:3000/api/roast";
+const API_URL = `${API_BASE_URL}/api/roast`;
 const REQUEST_TIMEOUT_MS = 30000;
 
 const roastButton = document.getElementById("roastButton");
@@ -26,7 +27,7 @@ function getFriendlyErrorMessage(error) {
     }
 
     if (error?.message === "Failed to fetch" || error?.name === "TypeError") {
-        return "Can't reach the Taboo server. Is it running on localhost:3000?";
+        return "Can't reach the Taboo API. Check config.js and your Worker deploy.";
     }
 
     if (typeof error?.status === "number") {
@@ -35,17 +36,17 @@ function getFriendlyErrorMessage(error) {
         }
 
         if (error.status >= 500) {
-            return "The server stumbled while talking to Gemini. Try again.";
+            return "The API stumbled while talking to Gemini. Try again.";
         }
 
-        return `Server said no (${error.status}). Try again.`;
+        return `API said no (${error.status}). Try again.`;
     }
 
     if (error?.message === "Empty roast response") {
         return "Gemini returned an empty roast. Try once more.";
     }
 
-    return "The roast flopped. Check the server, then try again.";
+    return "The roast flopped. Check the API, then try again.";
 }
 
 async function requestRoast(roastContext) {

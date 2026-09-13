@@ -1,0 +1,15 @@
+{
+  "name": "taboo-worker",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Cloudflare Worker backend for Taboo",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "secret:gemini": "wrangler secret put GEMINI_API_KEY"
+  },
+  "devDependencies": {
+    "wrangler": "^4.40.0"
+  }
+}

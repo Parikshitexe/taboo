@@ -6,6 +6,10 @@
   "permissions": [
     "tabs"
   ],
+  "host_permissions": [
+    "http://localhost:3000/*",
+    "https://*.workers.dev/*"
+  ],
   "action": {
     "default_popup": "popup.html",
     "default_title": "Taboo",

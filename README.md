@@ -9,63 +9,96 @@ Tab analyzer = facts. Gemini = the joke.
 ```text
 TABOO/
 ├── extension/          # Chrome extension (Manifest V3)
-│   ├── popup.html
-│   ├── popup.css
-│   ├── popup.js
-│   ├── manifest.json
-│   ├── icons/
-│   └── js/
-│       ├── tabAnalyzer.js
-│       └── contextBuilder.js
-└── server/             # Local Express backend
-    ├── server.js
-    ├── services/geminiService.js
-    └── .env            # GEMINI_API_KEY (not committed)
+│   ├── popup.*         # UI
+│   ├── js/config.js    # API URL lives here
+│   └── js/             # tabAnalyzer + contextBuilder
+├── worker/             # Cloudflare Worker API (recommended deploy)
+└── server/             # Optional local Express API (learning/debug)
 ```
 
-## Setup
+## Deploy for free (Cloudflare Workers)
 
-### 1. Backend
+### 1. Install + login
+
+```bash
+cd worker
+npm install
+npx wrangler login
+```
+
+This opens a browser so you can authorize Cloudflare (free account).
+
+### 2. Put your Gemini key in Workers secrets
+
+```bash
+npm run secret:gemini
+```
+
+Paste your `GEMINI_API_KEY` when prompted.  
+It is stored by Cloudflare — not in git.
+
+### 3. Deploy
+
+```bash
+npm run deploy
+```
+
+Copy the URL Wrangler prints, like:
+
+```text
+https://taboo-api.<your-subdomain>.workers.dev
+```
+
+Test in a browser:
+
+```text
+https://taboo-api.<your-subdomain>.workers.dev/
+```
+
+You should see `{ "message": "Taboo Worker is alive" }`.
+
+### 4. Point the extension at the Worker
+
+Edit `extension/js/config.js`:
+
+```js
+export const API_BASE_URL = "https://taboo-api.<your-subdomain>.workers.dev";
+```
+
+Reload the extension on `chrome://extensions`.
+
+### 5. Roast
+
+Click **Roast me**. No local Node server needed.
+
+## Share with friends ($0 — no Chrome Web Store)
+
+1. Keep the Worker deployed  
+2. Zip the `extension` folder (with your Worker URL already in `config.js`)  
+3. They: `chrome://extensions` → Developer mode → **Load unpacked**
+
+No Store fee required.
+
+## Local Express (optional)
 
 ```bash
 cd server
 npm install
-```
-
-Create `server/.env`:
-
-```env
-GEMINI_API_KEY=your_key_here
-```
-
-Start the server:
-
-```bash
 npm start
 ```
 
-You should see it running on `http://localhost:3000`.
+Use in `extension/js/config.js`:
 
-### 2. Extension
-
-1. Open Chrome → `chrome://extensions`
-2. Turn on **Developer mode**
-3. Click **Load unpacked**
-4. Select the `extension` folder
-5. Pin Taboo from the extensions menu
-
-## How to use
-
-1. Keep the server running
-2. Open a few tabs (the messier, the better)
-3. Click the Taboo icon → **Roast me**
+```js
+export const API_BASE_URL = "http://localhost:3000";
+```
 
 ## Privacy notes (MVP)
 
-- The extension reads tab **titles** and **domains** (not page content)
+- Reads tab **titles** and **domains** (not page content)
 - Raw URLs are not sent to the AI context
 - Email-looking text in titles is redacted
-- The Gemini API key stays on the server only
+- Gemini API key stays in Worker secrets / server `.env` only
 - Large tab sets are trimmed before sending
 
 ## Learning map
@@ -74,12 +107,13 @@ You should see it running on `http://localhost:3000`.
 |-------|-----|
 | `tabAnalyzer.js` | Count tabs, domains, duplicates |
 | `contextBuilder.js` | Build a privacy-aware AI payload |
-| `popup.js` | UI + talk to the backend |
-| `server.js` | Validate requests, protect the API key |
-| `geminiService.js` | Prompt Gemini and return a roast |
+| `popup.js` + `config.js` | UI + call the API URL |
+| `worker/` | Free hosted API (validation + Gemini) |
+| `server/` | Same idea, local Express |
 
 ## Requirements
 
 - Node.js 18+
 - Chrome (Manifest V3)
+- Free Cloudflare account
 - A Gemini API key
